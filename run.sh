@@ -7,6 +7,7 @@ PYTHON=python3
 TESTS=(
   "load_another"
   "oneof_test"
+  "apply_test"
 )
 
 GENERATED_FILES=()
