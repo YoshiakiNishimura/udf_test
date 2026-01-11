@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+message BB {
+  int64 value = 1;
+}
+message AA{
+  int64 value = 1;
+}
+service StreamService {
+  rpc app_func(AA) returns (stream BB);
+}
