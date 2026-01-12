@@ -12,6 +12,7 @@ import configparser
 import load_another_pb2
 import load_another_pb2_grpc
 
+
 class GreeterServiceImpl(load_another_pb2_grpc.GreeterServicer):
 
     def SayHello(self, request, context):
@@ -44,12 +45,8 @@ class ByerServiceImpl(load_another_pb2_grpc.ByerServicer):
 def run_server(server_address: str, secure: str):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 
-    load_another_pb2_grpc.add_GreeterServicer_to_server(
-        GreeterServiceImpl(), server
-    )
-    load_another_pb2_grpc.add_ByerServicer_to_server(
-        ByerServiceImpl(), server
-    )
+    load_another_pb2_grpc.add_GreeterServicer_to_server(GreeterServiceImpl(), server)
+    load_another_pb2_grpc.add_ByerServicer_to_server(ByerServiceImpl(), server)
 
     if secure == "false":
         server.add_insecure_port(server_address)
@@ -71,12 +68,8 @@ def main():
         config = configparser.ConfigParser()
         try:
             config.read(ini_file)
-            server_address = config.get(
-                "udf", "endpoint", fallback=server_address
-            )
-            secure = config.get(
-                "udf", "secure", fallback=secure
-            )
+            server_address = config.get("udf", "endpoint", fallback=server_address)
+            secure = config.get("udf", "secure", fallback=secure)
             print(f"[INFO] Loaded gRPC settings from {ini_file}")
         except Exception as e:
             print(f"[WARN] Failed to read ini file '{ini_file}': {e}")
@@ -89,4 +82,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

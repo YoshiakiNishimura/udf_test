@@ -1,3 +1,7 @@
 #!/bin/bash
-#tgsql -c ipc:tsurugi --script load_another/script/test.sql
-tgsql -c ipc:tsurugi --script oneof_test/script/test.sql
+LIST=(load_another oneof_test apply_test complex)
+
+mkdir -p log
+for i in ${LIST[@]}; do
+	tgsql -c ipc:tsurugi --script $i/script/test.sql >log/${i}_stdout.log
+done

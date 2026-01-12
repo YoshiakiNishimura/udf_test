@@ -23,13 +23,22 @@ class StreamServiceImpl(apply_test_pb2_grpc.StreamServiceServicer):
             yield apply_test_pb2.BB(value=base + i)
             time.sleep(0.2)
 
+    def app_func2(self, request, context):
+        print("app_func2")
+        print("  request.i32:", request.i32)
+        print("  request.f  :", request.f)
+        print("  request.d  :", request.d)
+        base = int(request.i32) + int(request.f) + int(request.d)
+
+        for i in range(5):
+            yield apply_test_pb2.BB(value=base + i)
+            time.sleep(0.2)
+
 
 def run_server(server_address: str, secure: str):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 
-    apply_test_pb2_grpc.add_StreamServiceServicer_to_server(
-        StreamServiceImpl(), server
-    )
+    apply_test_pb2_grpc.add_StreamServiceServicer_to_server(StreamServiceImpl(), server)
 
     if secure == "false":
         server.add_insecure_port(server_address)
@@ -51,12 +60,8 @@ def main():
         config = configparser.ConfigParser()
         try:
             config.read(ini_file)
-            server_address = config.get(
-                "udf", "endpoint", fallback=server_address
-            )
-            secure = config.get(
-                "udf", "secure", fallback=secure
-            )
+            server_address = config.get("udf", "endpoint", fallback=server_address)
+            secure = config.get("udf", "secure", fallback=secure)
             print(f"[INFO] Loaded gRPC settings from {ini_file}")
         except Exception as e:
             print(f"[WARN] Failed to read ini file '{ini_file}': {e}")

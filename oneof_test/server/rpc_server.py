@@ -113,4 +113,3 @@ def run_server(ini_path=None):
 if __name__ == "__main__":
     ini_file = sys.argv[1] if len(sys.argv) >= 2 else None
     run_server(ini_file)
-

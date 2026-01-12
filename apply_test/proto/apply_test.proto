@@ -3,9 +3,15 @@ syntax = "proto3";
 message BB {
   int64 value = 1;
 }
-message AA{
+message AA {
   int64 value = 1;
+}
+message CC {
+  int32 i32 = 1;
+  float f = 11;
+  double d = 12;
 }
 service StreamService {
   rpc app_func(AA) returns (stream BB);
+  rpc app_func2(CC) returns (stream BB);
 }
