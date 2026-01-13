@@ -1,9 +1,51 @@
 syntax = "proto3";
-
+// buf format -w
 import "tsurugidb/udf/tsurugi_types.proto";
 message DecimalMessage {
   tsurugidb.udf.Decimal value = 1;
 }
+message DataMessage {
+  tsurugidb.udf.Date date = 1;
+}
+message TwoMessage {
+  tsurugidb.udf.Date date = 1;
+  tsurugidb.udf.LocalTime lt = 2;
+}
+message OffsetDatetimeMessage {
+  tsurugidb.udf.OffsetDatetime odt = 1;
+}
+message ThreeMessage {
+  tsurugidb.udf.BlobReference blob = 1;
+  tsurugidb.udf.ClobReference clob = 2;
+  tsurugidb.udf.LocalDatetime ldt = 3;
+}
+message AnotherTwoMessage {
+  tsurugidb.udf.LocalDatetime ldt = 1;
+  tsurugidb.udf.OffsetDatetime odt = 2;
+}
+message AllTypesRequest {
+  tsurugidb.udf.Decimal dec = 1;
+  tsurugidb.udf.Date date = 2;
+  tsurugidb.udf.LocalTime lt = 3;
+  tsurugidb.udf.LocalDatetime ldt = 4;
+  tsurugidb.udf.OffsetDatetime odt = 5;
+  tsurugidb.udf.BlobReference blob = 6;
+  tsurugidb.udf.ClobReference clob = 7;
+}
+message BlobMessage {
+  tsurugidb.udf.BlobReference blob = 1;
+}
 service Rec {
   rpc inc_decimal(DecimalMessage) returns (DecimalMessage);
+  rpc stream_decimal(DecimalMessage) returns (stream DecimalMessage);
+  rpc inc_two(TwoMessage) returns (DataMessage);
+  rpc stream_two(TwoMessage) returns (stream DataMessage);
+  rpc inc_another_two(AnotherTwoMessage) returns (OffsetDatetimeMessage);
+  rpc stream_another_two(AnotherTwoMessage) returns (stream OffsetDatetimeMessage);
+  rpc inc_three(ThreeMessage) returns (BlobMessage);
+  rpc inc_blob(BlobMessage) returns (BlobMessage);
+  rpc stream_blob(BlobMessage) returns (stream BlobMessage);
+  rpc stream_three(ThreeMessage) returns (stream BlobMessage);
+  rpc inc_alltypes(AllTypesRequest) returns (BlobMessage);
+  rpc stream_alltypes(AllTypesRequest) returns (stream BlobMessage);
 }
